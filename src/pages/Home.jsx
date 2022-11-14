@@ -62,16 +62,60 @@ const Home = () => {
     return (
         <>
             {user && (
-                <div>
-                    Home{' '}
-                    <Button variant="outlined" onClick={handleSignOut}>
-                        Logout
-                    </Button>
-                    <img
-                        src={user.photoURL ? user.photoURL : default_profile}
-                        alt=""
-                    />
-                </div>
+                <Box
+                    sx={{
+                        padding: '1rem',
+                        backgroundColor: '#edf6f9',
+                        minHeight: '100vh',
+                    }}
+                >
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            justifyContent: 'flex-end',
+                            alignItems: 'center',
+                            marginBottom: '1rem',
+                        }}
+                    >
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                flexWrap: 'wrap',
+                                gap: '1rem',
+                                justifyContent: 'flex-end',
+                                alignItems: 'center',
+                            }}
+                        >
+                            <Button variant="outlined" onClick={handleSignOut}>
+                                Logout
+                            </Button>
+                            <Box
+                                sx={{
+                                    width: '45px',
+                                    height: '45px',
+                                    borderRadius: '50%',
+                                    overflow: 'hidden',
+                                }}
+                            >
+                                <img
+                                    src={
+                                        user.photoURL
+                                            ? user.photoURL
+                                            : default_profile
+                                    }
+                                    alt={user.displayName}
+                                    loading="lazy"
+                                    style={{
+                                        width: '100%',
+                                        height: '100%',
+                                        objectFit: 'cover',
+                                        objectPosition: 'center',
+                                    }}
+                                />
+                            </Box>
+                        </Box>
+                    </Box>
+                </Box>
             )}
         </>
     )
