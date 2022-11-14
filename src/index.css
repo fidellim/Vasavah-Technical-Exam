@@ -77,3 +77,16 @@ a:hover {
     box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.04), 0 1px 1px rgba(0, 0, 0, 0.25);
     cursor: not-allowed;
 }
+
+.clock .react-clock__face {
+    border-color: white;
+}
+
+.clock .react-clock__mark__body,
+.clock .react-clock__hand__body {
+    background-color: white;
+}
+
+.clock .react-clock__second-hand__body {
+    background-color: red;
+}
