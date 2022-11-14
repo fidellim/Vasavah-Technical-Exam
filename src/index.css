@@ -91,3 +91,21 @@ a:hover {
 .clock .react-clock__second-hand__body {
     background-color: red;
 }
+
+.clock__snooze {
+    animation-name: press_snooze;
+    animation-duration: 1s;
+    animation-timing-function: ease;
+}
+
+@keyframes press_snooze {
+    0% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(15px);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
