@@ -3,13 +3,15 @@ import { auth } from '../library/firebaseConfig'
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useSnackbar } from 'notistack'
-import { Typography, Box, TextField, Button, IconButton } from '@mui/material'
+import { Box, Button, IconButton } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
 import { default_profile } from '../library/constants'
+import DigitalClock from '../components/DigitalClock'
 
 const Home = () => {
     let navigate = useNavigate()
     const [user, setUser] = useState()
+
     const { enqueueSnackbar, closeSnackbar } = useSnackbar()
 
     const action = (snackbarId) => (
@@ -26,12 +28,10 @@ const Home = () => {
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (user) {
-                const uid = user.uid
+                // const uid = user.uid
                 // setFirebasePath(`users/${uid}/todos`)
                 setUser(user)
-                console.log(user)
-                // setIsSuccess(true)
-                // setOpen(true)
+                // console.log(user)
             } else {
                 // User is signed out
                 navigate(`/login`)
@@ -39,7 +39,7 @@ const Home = () => {
         })
 
         return () => unsubscribe()
-    }, [])
+    }, [navigate])
 
     const handleSignOut = () => {
         signOut(auth)
@@ -114,6 +114,16 @@ const Home = () => {
                                 />
                             </Box>
                         </Box>
+                    </Box>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            flexWrap: 'wrap',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                        }}
+                    >
+                        <DigitalClock />
                     </Box>
                 </Box>
             )}
