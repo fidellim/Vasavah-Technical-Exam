@@ -1,16 +1,28 @@
 import { onAuthStateChanged, signOut } from 'firebase/auth'
 import { auth } from '../library/firebaseConfig'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useSnackbar } from 'notistack'
-import { Box, Button, IconButton } from '@mui/material'
+import { Typography, Box, Button, IconButton } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
 import { default_profile } from '../library/constants'
 import DigitalClock from '../components/DigitalClock'
 
 const Home = () => {
     let navigate = useNavigate()
+    const clockSnoozeButtonRef = useRef()
     const [user, setUser] = useState()
+    const [attendance, setAttendance] = useState()
+    const [isClockIn, setIsClockIn] = useState(true)
+    const dateTimeString = {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        second: 'numeric',
+        hour12: false,
+    }
 
     const { enqueueSnackbar, closeSnackbar } = useSnackbar()
 
@@ -57,6 +69,29 @@ const Home = () => {
                     variant: 'error',
                 })
             })
+    }
+
+    const handleClockSnooze = () => {
+        clockSnoozeButtonRef.current.classList.remove('clock__snooze')
+        void clockSnoozeButtonRef.current.offsetWidth
+        clockSnoozeButtonRef.current.classList.add('clock__snooze')
+        setIsClockIn((prev) => {
+            if (prev) {
+                setAttendance({
+                    email: user.email,
+                    clockIn: new Date(),
+                })
+            } else {
+                setAttendance((prev) => {
+                    return {
+                        ...prev,
+                        clockOut: new Date(),
+                    }
+                })
+            }
+
+            return !prev
+        })
     }
 
     return (
@@ -123,8 +158,77 @@ const Home = () => {
                             alignItems: 'center',
                         }}
                     >
-                        <DigitalClock />
+                        <DigitalClock ref={clockSnoozeButtonRef} />
                     </Box>
+
+                    <Button variant="contained" onClick={handleClockSnooze}>
+                        {isClockIn ? 'Clock in' : 'Clock out'}
+                    </Button>
+
+                    {attendance && (
+                        <Box
+                            sx={{
+                                border: '5px solid #EDC9AF',
+                                borderRadius: '7px',
+                                padding: '1.25rem 1rem',
+                            }}
+                        >
+                            <Typography
+                                variant="h4"
+                                sx={{
+                                    fontSize: {
+                                        xs: '.75rem',
+                                        sm: '1.25rem',
+                                    },
+                                    marginBottom: '2px',
+                                    color: 'black',
+                                    fontWeight: '300',
+                                }}
+                            >
+                                {attendance.email}
+                            </Typography>
+                            {attendance.clockIn && (
+                                <Typography
+                                    variant="h4"
+                                    sx={{
+                                        fontSize: {
+                                            xs: '.75rem',
+                                            sm: '1.25rem',
+                                        },
+                                        marginBottom: '2px',
+                                        color: 'black',
+                                        fontFamily: 'Orbitron, sans-serif',
+                                    }}
+                                >
+                                    <b>Clock in:</b>{' '}
+                                    {new Intl.DateTimeFormat(
+                                        'en-US',
+                                        dateTimeString
+                                    ).format(attendance.clockIn)}
+                                </Typography>
+                            )}
+                            {attendance.clockOut && (
+                                <Typography
+                                    variant="h4"
+                                    sx={{
+                                        fontSize: {
+                                            xs: '.75rem',
+                                            sm: '1.25rem',
+                                        },
+                                        marginBottom: '2px',
+                                        color: 'black',
+                                        fontFamily: 'Orbitron, sans-serif',
+                                    }}
+                                >
+                                    <b>Clock out:</b>{' '}
+                                    {new Intl.DateTimeFormat(
+                                        'en-US',
+                                        dateTimeString
+                                    ).format(attendance.clockOut)}
+                                </Typography>
+                            )}
+                        </Box>
+                    )}
                 </Box>
             )}
         </>
