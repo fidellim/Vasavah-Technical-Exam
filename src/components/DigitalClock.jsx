@@ -1,8 +1,8 @@
 import Clock from 'react-clock'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, forwardRef } from 'react'
 import { Typography, Box } from '@mui/material'
 
-const DigitalClock = () => {
+const DigitalClock = forwardRef((props, ref) => {
     const [value, setValue] = useState(new Date())
 
     const dateString = {
@@ -45,12 +45,14 @@ const DigitalClock = () => {
                         borderTopLeftRadius: '20px',
                         borderTopRightRadius: '20px',
                     }}
+                    ref={ref}
                 />
                 <Box
                     sx={{
                         borderRadius: '12px',
                         padding: '1rem',
                         backgroundColor: '#EDC9AF',
+                        zIndex: '1',
                     }}
                 >
                     <Box
@@ -139,6 +141,6 @@ const DigitalClock = () => {
             </Box>
         </>
     )
-}
+})
 
 export default DigitalClock
