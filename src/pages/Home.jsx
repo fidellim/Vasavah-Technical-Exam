@@ -7,13 +7,18 @@ import { Typography, Box, Button, IconButton } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
 import { default_profile } from '../library/constants'
 import DigitalClock from '../components/DigitalClock'
+import { addLog, queryLogs } from '../database'
+import { onSnapshot } from 'firebase/firestore'
+import Logs from '../components/Logs'
 
 const Home = () => {
     let navigate = useNavigate()
     const clockSnoozeButtonRef = useRef()
     const [user, setUser] = useState()
     const [attendance, setAttendance] = useState()
+    const [logs, setLogs] = useState()
     const [isClockIn, setIsClockIn] = useState(true)
+    const [firebasePath, setFirebasePath] = useState()
     const dateTimeString = {
         year: 'numeric',
         month: 'short',
@@ -38,10 +43,25 @@ const Home = () => {
     )
 
     useEffect(() => {
+        const unsubscribe =
+            firebasePath &&
+            onSnapshot(queryLogs(firebasePath), (querySnapshot) => {
+                setLogs(
+                    querySnapshot.docs.map((doc) => {
+                        // add doc.id to have reference for each todo
+                        return { ...doc.data(), id: doc.id }
+                    })
+                )
+            })
+
+        return () => firebasePath && unsubscribe()
+    }, [firebasePath])
+
+    useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (user) {
-                // const uid = user.uid
-                // setFirebasePath(`users/${uid}/todos`)
+                const uid = user.uid
+                setFirebasePath(`users/${uid}/logs`)
                 setUser(user)
                 // console.log(user)
             } else {
@@ -82,11 +102,16 @@ const Home = () => {
                     clockIn: new Date(),
                 })
             } else {
-                setAttendance((prev) => {
-                    return {
-                        ...prev,
-                        clockOut: new Date(),
-                    }
+                setAttendance(async (prev) => {
+                    const docRef = await addLog(
+                        {
+                            ...prev,
+                            clockOut: new Date(),
+                        },
+                        firebasePath
+                    )
+
+                    return {}
                 })
             }
 
@@ -156,37 +181,41 @@ const Home = () => {
                             flexWrap: 'wrap',
                             justifyContent: 'center',
                             alignItems: 'center',
+                            gap: '1.5rem',
+                            margin: '1rem 0',
                         }}
                     >
                         <DigitalClock ref={clockSnoozeButtonRef} />
+                        <Button variant="contained" onClick={handleClockSnooze}>
+                            {isClockIn ? 'Clock in' : 'Clock out'}
+                        </Button>
                     </Box>
 
-                    <Button variant="contained" onClick={handleClockSnooze}>
-                        {isClockIn ? 'Clock in' : 'Clock out'}
-                    </Button>
-
-                    {attendance && (
+                    {attendance && Object.keys(attendance).length > 0 && (
                         <Box
                             sx={{
                                 border: '5px solid #EDC9AF',
                                 borderRadius: '7px',
                                 padding: '1.25rem 1rem',
+                                marginBottom: '1rem',
                             }}
                         >
-                            <Typography
-                                variant="h4"
-                                sx={{
-                                    fontSize: {
-                                        xs: '.75rem',
-                                        sm: '1.25rem',
-                                    },
-                                    marginBottom: '2px',
-                                    color: 'black',
-                                    fontWeight: '300',
-                                }}
-                            >
-                                {attendance.email}
-                            </Typography>
+                            {attendance.email && (
+                                <Typography
+                                    variant="h4"
+                                    sx={{
+                                        fontSize: {
+                                            xs: '.75rem',
+                                            sm: '1.25rem',
+                                        },
+                                        marginBottom: '2px',
+                                        color: 'black',
+                                        fontWeight: '300',
+                                    }}
+                                >
+                                    {attendance.email}
+                                </Typography>
+                            )}
                             {attendance.clockIn && (
                                 <Typography
                                     variant="h4"
@@ -229,6 +258,7 @@ const Home = () => {
                             )}
                         </Box>
                     )}
+                    {logs && <Logs logs={logs} />}
                 </Box>
             )}
         </>
