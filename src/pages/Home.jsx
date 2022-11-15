@@ -103,7 +103,7 @@ const Home = () => {
                 })
             } else {
                 setAttendance(async (prev) => {
-                    const docRef = await addLog(
+                    await addLog(
                         {
                             ...prev,
                             clockOut: new Date(),
