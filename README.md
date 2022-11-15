@@ -20,3 +20,8 @@
 ### References:
 
 -   [Date Time Format](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat#using_options)
+-   [Timestamp to Date Convert](https://stackoverflow.com/questions/52247445/how-do-i-convert-a-firestore-date-timestamp-to-a-js-date)
+-   [Pass ref to a child component using forwardRef](https://reactjs.org/docs/forwarding-refs.html)
+-   [Restart an animation of an element](https://www.harrytheo.com/blog/2021/02/restart-a-css-animation-with-javascript/)
+-   [Nested border radius](https://www.30secondsofcode.org/articles/s/css-nested-border-radius)
+-   [Sort queries in FireStore](https://firebase.google.com/docs/firestore/query-data/order-limit-data)
