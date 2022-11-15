@@ -80,7 +80,16 @@ const Login = () => {
     return (
         <>
             {!user && (
-                <Box sx={{ padding: '1rem' }}>
+                <Box
+                    sx={{
+                        padding: '1rem',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        backgroundColor: '#edf6f9',
+                        minHeight: '100vh',
+                    }}
+                >
                     <Box
                         sx={{
                             background: 'white',
