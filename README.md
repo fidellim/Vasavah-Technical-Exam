@@ -25,3 +25,4 @@
 -   [Restart an animation of an element](https://www.harrytheo.com/blog/2021/02/restart-a-css-animation-with-javascript/)
 -   [Nested border radius](https://www.30secondsofcode.org/articles/s/css-nested-border-radius)
 -   [Sort queries in FireStore](https://firebase.google.com/docs/firestore/query-data/order-limit-data)
+-   [Fix redirect issue in netlify](https://www.makeuseof.com/netlify-redirect-fail-error-fix/#:~:text=Failing%20Redirects%20Error%20on%20Netlify&text=This%20error%20can%20occur%20when,than%20displaying%20the%20home%20page.)
