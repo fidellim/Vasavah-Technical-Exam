@@ -258,7 +258,7 @@ const Home = () => {
                             )}
                         </Box>
                     )}
-                    {logs && <Logs logs={logs} />}
+                    {logs && <Logs logs={logs} firebasePath={firebasePath} />}
                 </Box>
             )}
         </>
